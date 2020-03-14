@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<context:property-placeholder location="/WEB-INF/properties/*.properties"/>
+
+	<!-- Mapper Annotation 스캔 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" 		value="com.spring.**.impl" />
+	</bean>
+
+	<!-- mysql 접속 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"	value="${db.driverClassName}" />
+		<property name="url" 							value="${db.connectUrl}" />
+		<property name="username" 				value="${db.username}" />
+		<property name="password" 				value="${db.password}" />
+	</bean>
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" 			ref="dataSource" />
+		<property name="configLocation" 		value="classpath:/mappers/mybatis-config.xml" />
+		<property name="mapperLocations"	value="classpath:/mappers/**/*_SQL.xml" />
+	</bean>
+
+	<!-- Controller를 제외한 빈등록 -->
+	<context:component-scan base-package="com.spring">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- Transaction 설정하기 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<!-- rollback-for : rollback을 발생시키는 Exception의 종류 -->
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 서비스 메서드 Transaction 연결 -->
+	<aop:config>
+		<aop:pointcut id="serviceMethod" expression="execution(* com.spring..impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
+	</aop:config>
+		
+</beans>
