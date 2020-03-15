@@ -51,7 +51,6 @@
 			<version>${org.aspectj-version}</version>
 		</dependency>
 
-
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -193,7 +192,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<version>${org.security-version}</version>
 		</dependency>
-
+		
 	</dependencies>
 	<build>
 		<plugins>
