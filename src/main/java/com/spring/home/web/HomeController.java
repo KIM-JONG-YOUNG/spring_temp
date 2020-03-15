@@ -43,7 +43,7 @@ public class HomeController {
 
 		homeService.selectVersion();
 
-		return "home";
+		return "home/home.tiles";
 	}
 
 	@RequestMapping(value = "/2", method = RequestMethod.GET)
