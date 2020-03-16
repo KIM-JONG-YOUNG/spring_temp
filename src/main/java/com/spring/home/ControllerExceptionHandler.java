@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ControllerExceptionHandler {
 
 	public Object aroundMethod(ProceedingJoinPoint joinPoint) {
-		//컨트롤러에서 @ResponseBody를 사용했을 경우도 String 리턴
-		System.out.println("AOP Strart");
 		String result = null;
+
 		try {
 			result = (String) joinPoint.proceed();
 		} catch (Throwable e) {
@@ -22,7 +21,7 @@ public class ControllerExceptionHandler {
 			e.printStackTrace();
 			result = "cmmn/error";
 		}
-		System.out.println("AOP End");
+		
 		return result;
 	}
 }

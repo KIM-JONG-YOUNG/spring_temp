@@ -16,7 +16,7 @@ public class MemberLoginFailureHandler implements AuthenticationFailureHandler {
 			AuthenticationException exception) throws IOException, ServletException {
 		// TODO Auto-generated method stub
 		request.setAttribute("errorMsg", exception.getMessage());
-		request.getRequestDispatcher("/loginForm.do").forward(request, response);
+		request.getRequestDispatcher("member/loginForm.do").forward(request, response);
 	}
 
 }

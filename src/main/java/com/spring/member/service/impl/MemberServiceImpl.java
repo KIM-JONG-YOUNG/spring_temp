@@ -19,11 +19,11 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 	private MemberMapper memberMapper;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		MemberVO memverVO = null;
 		try {
-			Map<String, Object> memberMap = memberMapper.selectMemberOne(username);
+			Map<String, Object> memberMap = memberMapper.selectMemberOne(memberId);
 			if (memberMap == null || memberMap.isEmpty()) {
 				throw new UsernameNotFoundException("존재하지 않는 회원입니다.");
 			} else {
@@ -44,5 +44,12 @@ public class MemberServiceImpl implements MemberService, UserDetailsService {
 		}
 		return memverVO;
 	}
+
+	@Override
+	public Map<String, Object> selectMemberOne(String memberId) throws Exception {
+		// TODO Auto-generated method stub
+		return memberMapper.selectMemberOne(memberId);
+	}
+
 
 }
